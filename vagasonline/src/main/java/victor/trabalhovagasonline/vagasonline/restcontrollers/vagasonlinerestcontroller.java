@@ -13,7 +13,7 @@ public class vagasonlinerestcontroller {
     @Autowired
     VagasService vagasService;
 
-    @GetMapping("vagas/getall")
+    @GetMapping("vagas/get-all")
     public ResponseEntity<Object> getAllVagas(){
         return ResponseEntity.ok(vagasService.getAllVagas());
     }

@@ -50,6 +50,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--Novas Dependencias adicionadas -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
