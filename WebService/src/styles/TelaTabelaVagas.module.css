@@ -1,0 +1,59 @@
+/* src/app/styles/TelaTabelaVagas.module.css */
+.tableContainer {
+  width: 100%;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table th {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--foreground);
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.table td {
+  font-size: 0.9rem;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: var(--background);
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #71717a;
+}
+
+.error {
+  color: #dc2626;
+  margin-bottom: 1rem;
+}

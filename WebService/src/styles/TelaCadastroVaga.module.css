@@ -1,0 +1,80 @@
+/* src/app/styles/TelaCadastroVaga.module.css */
+.formContainer {
+  width: 100%;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #71717a;
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* Em telas maiores, divide o formulário em duas colunas */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.formGroup textarea {
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.messageError {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.messageSuccess {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.form button[type="submit"] {
+  width: 100%;
+  max-width: 250px;
+  align-self: flex-start;
+}
