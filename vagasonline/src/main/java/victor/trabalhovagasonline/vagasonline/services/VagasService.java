@@ -12,19 +12,37 @@ import victor.trabalhovagasonline.vagasonline.entities.Vaga;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mongodb.client.model.Filters.eq; // Importe este
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set; // Importe este
 
 @Service
 public class VagasService {
 
-    // Helper para obter a conexão (seguindo seu padrão)
     private MongoDatabase getDatabase() {
         String connectionString = "mongodb://localhost:27017";
-        // FIXME: O MongoClient deve ser um Bean gerenciado pelo Spring,
-        // criar um por método vaza recursos.
+        // FIXME: Considere gerenciar o MongoClient como um Bean Spring (Singleton)
         MongoClient mongoClient = MongoClients.create(connectionString);
         return mongoClient.getDatabase("vagas_online");
     }
+
+    //Verifica se uma vaga (pelo seu registro) possui algum interesse cadastrado
+    private boolean vagaHasInteresse(String registro) {
+        try {
+            MongoDatabase database = getDatabase();
+            MongoCollection<Document> collection = database.getCollection("interesses");
+
+            // Procura por qualquer documento em "interesses" onde o campo "vaga.registro" é igual ao registro
+            // .first() é otimizado para parar a busca assim que encontrar o primeiro
+            Document interesse = collection.find(eq("vaga.registro", registro)).first();
+
+            return interesse != null; // Se encontrou (não é nulo), então tem interesse
+        } catch (Exception e) {
+            System.out.println(e);
+            // Em caso de erro de banco, é mais seguro bloquear a ação (retornar true)
+            return true;
+        }
+    }
+
 
     public List<Vaga> getAllVagas(){
         List<Vaga> vagaList = new ArrayList<>();
@@ -41,7 +59,6 @@ public class VagasService {
         return vagaList;
     }
 
-    // --- NOVO PARA O ADMIN (Frontend) ---
     public List<Empresa> getAllEmpresas(){
         List<Empresa> empresaList = new ArrayList<>();
         try {
@@ -57,7 +74,6 @@ public class VagasService {
         return empresaList;
     }
 
-    // --- NOVO PARA O ADMIN (Frontend) ---
     public List<Cargo> getAllCargos(){
         List<Cargo> cargoList = new ArrayList<>();
         try {
@@ -73,7 +89,6 @@ public class VagasService {
         return cargoList;
     }
 
-    // --- NOVO PARA O ADMIN (Frontend) ---
     public Vaga createVaga(Vaga vaga) {
         try {
             MongoDatabase database = getDatabase();
@@ -91,12 +106,15 @@ public class VagasService {
         }
     }
 
-    // --- NOVO PARA O ADMIN (Frontend) ---
     public boolean deleteVaga(String registro) {
+
+        if (vagaHasInteresse(registro)) {
+            throw new IllegalStateException("Esta vaga tem candidaturas e não pode ser excluída.");
+        }
+
         try {
             MongoDatabase database = getDatabase();
             MongoCollection<Document> collection = database.getCollection("vagas");
-            // Deleta o documento onde o campo "registro" é igual ao id recebido
             collection.deleteOne(eq("registro", registro));
             return true;
         } catch (Exception e) {
@@ -105,7 +123,6 @@ public class VagasService {
         }
     }
 
-    // --- NOVO PARA O APP ANDROID ---
     public Interesse registerInterest(Interesse interesse) {
         try {
             MongoDatabase database = getDatabase();
@@ -130,7 +147,6 @@ public class VagasService {
             Document doc = collection.find(eq("registro", registro)).first();
 
             if (doc != null) {
-                // Converte o Document do Mongo para um objeto Vaga
                 return new Gson().fromJson(doc.toJson(), Vaga.class);
             }
         } catch (Exception e) {
@@ -139,54 +155,30 @@ public class VagasService {
         return null;
     }
 
-    // --- NOVO (Para a tela de Edição) ---
     public Vaga updateVaga(String registro, Vaga vaga) {
+
+        if (vagaHasInteresse(registro)) {
+            throw new IllegalStateException("Esta vaga tem candidaturas e não pode ser alterada.");
+        }
+
         try {
             MongoDatabase database = getDatabase();
             MongoCollection<Document> collection = database.getCollection("vagas");
 
             Gson gson = new Gson();
             Document doc = Document.parse(gson.toJson(vaga));
-            doc.remove("registro"); // Não queremos atualizar o ID
+            doc.remove("registro");
 
-            // Cria um Document com todos os campos para $set
             Document updateFields = new Document();
             for (String key : doc.keySet()) {
                 updateFields.append(key, doc.get(key));
             }
 
-            // Encontra pelo 'registro' e atualiza os campos
             collection.updateOne(eq("registro", registro), new Document("$set", updateFields));
-            return vaga; // Retorna a vaga atualizada
+            return vaga;
         } catch (Exception e) {
             System.out.println(e);
             return null;
         }
     }
-
 }
-
-
-
-
-/*public List<Vaga> getAllVagas(){
-        List<Vaga> vagaList = new ArrayList<>();
-        try {
-            String connectionString = "mongodb://localhost:27017";
-            MongoClient mongoClient = MongoClients.create(connectionString);
-
-            //Accessando um database (base de dados)
-            MongoDatabase database = mongoClient.getDatabase("vagas_online");
-
-            //selecionando uma coleção
-            MongoCollection<Document> collection = database.getCollection("vagas");
-            MongoCursor<Document> cursor= collection.find().iterator();
-
-            // insere os Documents em um ArrayList de Carro
-            while (cursor.hasNext())
-                vagaList.add(new Gson().fromJson(cursor.next().toJson(),Vaga.class));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return vagaList;
-    }*/

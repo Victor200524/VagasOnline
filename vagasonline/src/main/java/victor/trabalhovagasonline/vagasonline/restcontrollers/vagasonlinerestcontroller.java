@@ -1,10 +1,11 @@
 package victor.trabalhovagasonline.vagasonline.restcontrollers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus; // IMPORTADO
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*; // Importe com *
-import victor.trabalhovagasonline.vagasonline.entities.Interesse; // Novo
-import victor.trabalhovagasonline.vagasonline.entities.Vaga; // Novo
+import org.springframework.web.bind.annotation.*;
+import victor.trabalhovagasonline.vagasonline.entities.Interesse;
+import victor.trabalhovagasonline.vagasonline.entities.Vaga;
 import victor.trabalhovagasonline.vagasonline.services.VagasService;
 
 @CrossOrigin(origins = "*")
@@ -20,68 +21,81 @@ public class vagasonlinerestcontroller {
         return ResponseEntity.ok(vagasService.getAllVagas());
     }
 
-    // --- NOVO (Para o Admin) ---
+    // --- Para o Admin---
     @GetMapping("empresas/get-all")
     public ResponseEntity<Object> getAllEmpresas(){
         return ResponseEntity.ok(vagasService.getAllEmpresas());
     }
 
-    // --- NOVO (Para o Admin) ---
+    // --- Para o Admin---
     @GetMapping("cargos/get-all")
     public ResponseEntity<Object> getAllCargos(){
         return ResponseEntity.ok(vagasService.getAllCargos());
     }
 
-    // --- NOVO (Para o Admin) ---
+    // --- Para o Admin---
     @PostMapping("vagas")
     public ResponseEntity<Object> createVaga(@RequestBody Vaga vaga) {
         if (vaga == null) {
             return ResponseEntity.badRequest().body("Vaga inválida.");
         }
         Vaga novaVaga = vagasService.createVaga(vaga);
-        if (novaVaga != null) {
+        if (novaVaga != null)
             return ResponseEntity.ok(novaVaga);
-        } else {
+        else
             return ResponseEntity.internalServerError().body("Erro ao criar vaga.");
-        }
     }
 
-    // --- NOVO (Para o Admin) ---
+    // --- Para o Admin---
     @DeleteMapping("vagas/{registro}")
     public ResponseEntity<Object> deleteVaga(@PathVariable String registro) {
-        if (vagasService.deleteVaga(registro)) {
-            return ResponseEntity.ok().build(); // Retorna 200 OK sem corpo
-        } else {
-            return ResponseEntity.internalServerError().body("Erro ao deletar vaga.");
+        try {
+            // Tenta deletar a vaga
+            if (vagasService.deleteVaga(registro))
+                return ResponseEntity.ok().build(); // Retorna 200 OK sem corpo
+            else
+                return ResponseEntity.internalServerError().body("Erro ao deletar vaga.");
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            // Captura qualquer outro erro inesperado
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
         }
     }
 
-    // --- NOVO (Para a tela de Edição) ---
+    // --- Para o Admin---
     @GetMapping("vagas/{registro}")
     public ResponseEntity<Object> getVagaByRegistro(@PathVariable String registro) {
         Vaga vaga = vagasService.getVagaByRegistro(registro);
-        if (vaga != null) {
+        if (vaga != null)
             return ResponseEntity.ok(vaga);
-        } else {
+        else
             return ResponseEntity.notFound().build(); // Retorna 404 se não achar
-        }
     }
 
-    // --- NOVO (Para a tela de Edição) ---
+    // --- Para o Admin (ATUALIZADO) ---
     @PutMapping("vagas/{registro}")
     public ResponseEntity<Object> updateVaga(@PathVariable String registro, @RequestBody Vaga vaga) {
         if (vaga == null) {
             return ResponseEntity.badRequest().body("Vaga inválida.");
         }
-        Vaga vagaAtualizada = vagasService.updateVaga(registro, vaga);
-        if (vagaAtualizada != null) {
-            return ResponseEntity.ok(vagaAtualizada);
-        } else {
-            return ResponseEntity.internalServerError().body("Erro ao atualizar vaga.");
+        try {
+            // Tenta atualizar a vaga
+            Vaga vagaAtualizada = vagasService.updateVaga(registro, vaga);
+            if (vagaAtualizada != null)
+                return ResponseEntity.ok(vagaAtualizada);
+            else
+                return ResponseEntity.internalServerError().body("Erro ao atualizar vaga.");
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
         }
     }
 
-    // --- NOVO (Para o App Android) ---
+    // --- Para o App---
     @PostMapping("vagas/interesse")
     public ResponseEntity<Object> registerInterest(@RequestBody Interesse interesse) {
         if (interesse == null || interesse.getVaga() == null || interesse.getCandidato() == null) {
@@ -90,10 +104,9 @@ public class vagasonlinerestcontroller {
 
         Interesse novoInteresse = vagasService.registerInterest(interesse);
 
-        if (novoInteresse != null) {
+        if (novoInteresse != null)
             return ResponseEntity.ok(novoInteresse);
-        } else {
+        else
             return ResponseEntity.internalServerError().body("Erro ao registrar interesse.");
-        }
     }
 }
