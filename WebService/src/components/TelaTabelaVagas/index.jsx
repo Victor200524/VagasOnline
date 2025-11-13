@@ -1,77 +1,77 @@
-// src/app/components/TelaTabelaVagas/index.jsx
-'use client'; 
-
+'use client';
 import { useState } from 'react';
-import { deleteVaga } from '@/service'; 
+import { deleteVaga } from '../../service';
 import styles from '../../styles/TelaTabelaVagas.module.css';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function TelaTabelaVagas({ vagasIniciais }) {
-  const [vagas, setVagas] = useState(vagasIniciais);
+  const router = useRouter();
+  const [vagas, setVagas] = useState(vagasIniciais || []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleDelete = async (registro) => {
-    if (!confirm("Tem certeza que deseja excluir esta vaga?")) {
-      return;
-    }
+    if (confirm("Tem certeza que deseja excluir esta vaga?")) {
 
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const success = await deleteVaga(registro);
-      if (success) {
-        setVagas(vagas.filter(vaga => vaga.registro !== registro));
-      } else {
-        throw new Error("Falha ao deletar a vaga.");
+      setLoading(true);
+      setError(null);
+
+      try {
+        const success = await deleteVaga(registro);
+
+        if (success) {
+          setVagas(vagas.filter(vaga => vaga.registro !== registro));
+          router.refresh();
+        } 
+        else {
+          throw new Error("Falha ao deletar a vaga.");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
-  // --- INÍCIO DA CORREÇÃO ---
-  // Vamos criar o conteúdo do <tbody> em uma variável
-  
-  let tableContent;
+  let tableContent; // Conteúdo da tabela a ser renderizado
 
-  if (vagas.length === 0) {
+  if (!vagas || vagas.length === 0) {
     tableContent = (
-      <tr className={styles.emptyRow}>
+      <tr>
         <td colSpan="6" className={styles.empty}>Nenhuma vaga cadastrada.</td>
       </tr>
     );
-  } else {
+  } 
+  else {
     tableContent = vagas.map((vaga) => (
-      // Removi os comentários JSX daqui de dentro para garantir
       <tr key={vaga.registro}>
         <td>{vaga.cargo}</td>
         <td>{vaga.empresa?.nome_fantasia || 'N/A'}</td>
         <td>{vaga.cidade} - {vaga.estado}</td>
         <td>{vaga.regime}</td>
         <td>{vaga.remuneracao}</td>
-        <td>
-          <button 
+        <td className={styles.actions}>
+          <Link href={`../editar?registro=${vaga.registro}`} className={styles.editButton}>
+            Editar
+          </Link>
+          <button
             className="danger"
             onClick={() => handleDelete(vaga.registro)}
             disabled={loading}
           >
-            Excluir
+            {loading ? "..." : "Excluir"}
           </button>
         </td>
       </tr>
     ));
   }
-  // --- FIM DA CORREÇÃO ---
 
   return (
     <div className={styles.tableContainer}>
       <h1 className={styles.title}>Vagas Disponíveis</h1>
-      
       {error && <p className={styles.error}>{error}</p>}
-      
       <table className={styles.table}>
         <thead>
           <tr>
@@ -84,8 +84,6 @@ export default function TelaTabelaVagas({ vagasIniciais }) {
           </tr>
         </thead>
         <tbody>
-          {/* Agora o tbody renderiza apenas a variável, 
-              o que evita o erro de hidratação. */}
           {tableContent}
         </tbody>
       </table>

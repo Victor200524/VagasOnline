@@ -1,28 +1,29 @@
-// src/app/components/TelaCadastroVaga/index.jsx
-'use client';
-
+'use client'; // Serve para usar hooks como useState e useRouter
 import { useState } from 'react';
-import { createVaga } from '@/service';
+import { createVaga, updateVaga } from '../../service';
 import styles from '../../styles/TelaCadastroVaga.module.css';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 
-export default function TelaCadastroVaga({ empresas, cargos }) {
+export default function TelaCadastroVaga({ empresas, cargos, vagaParaEditar }) {
   const router = useRouter();
-  
-  // O estado do formulário agora reflete 100% os campos do vagas.json
+
+  // flag para saber se estamos em modo de edição ou criação
+  const isEditMode = !!vagaParaEditar;
+
+  // se caso a flag for para edição, preenche os campos com os dados da vaga
   const [formData, setFormData] = useState({
-    empresa: '', // Vai guardar o nome_fantasia
-    cargo: '',   // Vai guardar o nome do cargo
-    cidade: '',
-    estado: 'SP',
-    pre_requisitos: '', // Novo campo
-    formacao: '',
-    conhecimentos_requeridos: '', // Novo campo
-    regime: 'CLT',
-    jornada_trabalho: '', // Novo campo
-    remuneracao: '',      // Agora é uma string
+    empresa: vagaParaEditar?.empresa || null,
+    cargo: vagaParaEditar?.cargo || '',
+    cidade: vagaParaEditar?.cidade || '',
+    estado: vagaParaEditar?.estado || 'SP',
+    pre_requisitos: vagaParaEditar?.pre_requisitos || '',
+    formacao: vagaParaEditar?.formacao || '',
+    conhecimentos_requeridos: vagaParaEditar?.conhecimentos_requeridos || '',
+    regime: vagaParaEditar?.regime || 'CLT',
+    jornada_trabalho: vagaParaEditar?.jornada_trabalho || '',
+    remuneracao: vagaParaEditar?.remuneracao || '',
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -32,45 +33,55 @@ export default function TelaCadastroVaga({ empresas, cargos }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleEmpresaChange = (e) => {
+    const nomeFantasia = e.target.value;
+    const empresaObj = empresas.find(emp => emp.nome_fantasia === nomeFantasia);
+    setFormData(prev => ({ ...prev, empresa: empresaObj || null }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
+    if (formData.empresa || formData.cargo) {
+      setError("Selecione uma empresa e um cargo.");
 
-    // O service agora espera os dados neste formato
-    const dadosVaga = {
-      ...formData,
-    };
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
 
-    try {
-      await createVaga(dadosVaga);
-      setSuccess("Vaga cadastrada com sucesso!");
-      // Limpa o formulário para os novos campos
-      setFormData({
-        empresa: '', cargo: '', cidade: '', estado: 'SP',
-        pre_requisitos: '', formacao: '', conhecimentos_requeridos: '',
-        regime: 'CLT', jornada_trabalho: '', remuneracao: '',
-      });
-      
-      setTimeout(() => {
-        router.push('/'); 
-      }, 2000);
+      // Se for edição, reutiliza o registro existente
+      const dadosVaga = {
+        ...formData,
+        registro: isEditMode ? vagaParaEditar.registro : Math.random().toString(36).substring(2, 8).toUpperCase()
+      };
 
-    } catch (err) {
-      setError("Erro ao cadastrar vaga. Tente novamente.");
-      console.error(err);
-    } finally {
-      setLoading(false);
+      try {
+        if (isEditMode) {
+          // --- MODO DE EDIÇÃO ---
+          await updateVaga(vagaParaEditar.registro, dadosVaga);
+          setSuccess("Vaga atualizada com sucesso!");
+        }
+        else {
+          // --- MODO DE CRIAÇÃO ---
+          await createVaga(dadosVaga);
+          setSuccess("Vaga cadastrada com sucesso!");
+        }
+
+        setTimeout(() => {
+          router.push('/'); // Volta para a home
+          router.refresh(); // Força a atualização dos dados na home
+        }, 2000);
+
+      } catch (err) {
+        setError(`Erro ao ${isEditMode ? 'atualizar' : 'cadastrar'} vaga: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
     <div className={styles.formContainer}>
-      <h1 className={styles.title}>Cadastrar Nova Vaga</h1>
-      <p className={styles.subtitle}>
-        Preencha as informações abaixo para registrar uma nova vaga de emprego.
-      </p>
+      <h1 className={styles.title}>{isEditMode ? 'Editar Vaga' : 'Cadastrar Nova Vaga'}</h1>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
@@ -78,9 +89,14 @@ export default function TelaCadastroVaga({ empresas, cargos }) {
           <div className={styles.column}>
             <div className={styles.formGroup}>
               <label htmlFor="empresa">Empresa</label>
-              <select id="empresa" name="empresa" value={formData.empresa} onChange={handleChange} required>
+              <select
+                id="empresa"
+                name="empresa"
+                value={formData.empresa?.nome_fantasia || ''}
+                onChange={handleEmpresaChange}
+                required
+              >
                 <option value="">Selecione a empresa</option>
-                {/* Agora usa 'nome_fantasia' como valor e chave */}
                 {empresas.map(e => (
                   <option key={e.nome_fantasia} value={e.nome_fantasia}>{e.nome_fantasia}</option>
                 ))}
@@ -93,7 +109,7 @@ export default function TelaCadastroVaga({ empresas, cargos }) {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="regime">Regime de Contratação</label>
+              <label htmlFor="regime">Regime</label>
               <select id="regime" name="regime" value={formData.regime} onChange={handleChange}>
                 <option value="CLT">CLT</option>
                 <option value="PJ">PJ</option>
@@ -106,42 +122,32 @@ export default function TelaCadastroVaga({ empresas, cargos }) {
               <input type="text" id="formacao" name="formacao" value={formData.formacao} onChange={handleChange} />
             </div>
 
-             <div className={styles.formGroup}>
+            <div className={styles.formGroup}>
               <label htmlFor="pre_requisitos">Pré-Requisitos</label>
               <textarea id="pre_requisitos" name="pre_requisitos" rows="5" value={formData.pre_requisitos} onChange={handleChange}></textarea>
             </div>
           </div>
-          
+
           {/* Coluna 2 */}
           <div className={styles.column}>
             <div className={styles.formGroup}>
               <label htmlFor="cargo">Cargo</label>
               <select id="cargo" name="cargo" value={formData.cargo} onChange={handleChange} required>
                 <option value="">Selecione o cargo</option>
-                {/* Agora usa 'nome' como valor e chave */}
                 {cargos.map(c => (
                   <option key={c.nome} value={c.nome}>{c.nome}</option>
                 ))}
               </select>
             </div>
 
-             <div className={styles.formGroup}>
+            <div className={styles.formGroup}>
               <label htmlFor="estado">Estado</label>
-              <select id="estado" name="estado" value={formData.estado} onChange={handleChange}>
-                <option value="SP">SP</option>
-                <option value="RJ">RJ</option>
-                <option value="MG">MG</option>
-                <option value="PR">PR</option>
-                <option value="BA">BA</option>
-                <option value="SC">SC</option>
-                <option value="RS">RS</option>
-                <option value="DF">DF</option>
-              </select>
+              <input type="text" id="estado" name="estado" value={formData.estado} onChange={handleChange} maxLength="2" />
             </div>
 
             <div className={styles.formGroup}>
               <label htmlFor="jornada_trabalho">Jornada de Trabalho</label>
-              <input type="text" id="jornada_trabalho" name="jornada_trabalho" value={formData.jornada_trabalho} onChange={handleChange} placeholder="Ex: 40 horas semanais" />
+              <input type="text" id="jornada_trabalho" name="jornada_trabalho" value={formData.jornada_trabalho} onChange={handleChange} />
             </div>
 
             <div className={styles.formGroup}>
@@ -149,8 +155,8 @@ export default function TelaCadastroVaga({ empresas, cargos }) {
               <input type="text" id="remuneracao" name="remuneracao" value={formData.remuneracao} onChange={handleChange} placeholder="Ex: R$ 8.000,00" />
             </div>
 
-             <div className={styles.formGroup}>
-              <label htmlFor="conhecimentos_requeridos">Conhecimentos Requeridos</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="conhecimentos_requeridos">Conhecimentos</label>
               <textarea id="conhecimentos_requeridos" name="conhecimentos_requeridos" rows="5" value={formData.conhecimentos_requeridos} onChange={handleChange}></textarea>
             </div>
           </div>
@@ -160,7 +166,7 @@ export default function TelaCadastroVaga({ empresas, cargos }) {
         {success && <p className={styles.messageSuccess}>{success}</p>}
 
         <button type="submit" className="primary" disabled={loading}>
-          {loading ? "Cadastrando..." : "Cadastrar Vaga"}
+          {loading ? "Salvando..." : (isEditMode ? "Salvar Alterações" : "Cadastrar Vaga")}
         </button>
       </form>
     </div>

@@ -1,4 +1,3 @@
-/* src/app/globals.css */
 :root {
   --background: #f4f4f5;
   --foreground: #18181b;
@@ -46,14 +45,12 @@ a {
   text-decoration: none;
 }
 
-/* Container Principal */
 .main-container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-/* Estilos Padrão para Botões e Inputs */
 button {
   cursor: pointer;
   border: none;

@@ -1,9 +1,9 @@
-// src/app/cadastro/page.js
 import TelaCadastroVaga from "@/components/TelaCadastroVaga";
-import { getEmpresas, getCargos } from "@/service";
+import { getCargos, getEmpresas } from "@/service";
 
 export default async function CadastroPage() {
-  // Busca dados no servidor para os dropdowns
+  
+  // Busca os dados no servidor antes de renderizar a página
   const empresas = await getEmpresas();
   const cargos = await getCargos();
 
