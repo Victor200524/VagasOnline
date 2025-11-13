@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="vagasonline">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/vagasonline/src/main/java/victor/trabalhovagasonline/vagasonline.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
