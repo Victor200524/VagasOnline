@@ -1,0 +1,28 @@
+[
+    {
+        "vaga": {
+            "registro": "TECDFS",
+            "empresa": {
+                "nome_fantasia": "Tech Solutions",
+                "razao_social": "Tech Solutions LTDA",
+                "tipo": "nacional"
+            },
+            "cargo": "Desenvolvedor Full Stack",
+            "cidade": "São Paulo",
+            "estado": "SP",
+            "pre_requisitos": "Experiência em desenvolvimento ágil",
+            "formacao": "Superior Completo em Ciência da Computação",
+            "conhecimentos_requeridos": "JavaScript, Node.js, React",
+            "regime": "CLT",
+            "jornada_trabalho": "40 horas semanais",
+            "remuneracao": "R$ 8.000,00"
+        },
+        "candidato": {
+            "nome": "Januario Estevan",
+            "cpf": "12155588869",
+            "email": "januario@email.com",
+            "telefone": "1899885566",
+            "formacao": "bacharel em ciência da computação"
+        }
+    }
+]

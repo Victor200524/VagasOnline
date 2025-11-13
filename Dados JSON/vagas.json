@@ -1,0 +1,172 @@
+[
+  {
+    "registro":"TECDFS",
+    "empresa": {
+      "nome_fantasia": "Tech Solutions",
+      "razao_social": "Tech Solutions LTDA",
+      "tipo": "nacional"
+    },
+    "cargo": "Desenvolvedor Full Stack",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "pre_requisitos": "Experiência em desenvolvimento ágil",
+    "formacao": "Superior Completo em Ciência da Computação",
+    "conhecimentos_requeridos": "JavaScript, Node.js, React",
+    "regime": "CLT",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 8.000,00"
+  },
+  {
+    "registro":"INOAD",
+    "empresa": {
+      "nome_fantasia": "Inova Tech",
+      "razao_social": "Inova Tech S/A",
+      "tipo": "multinacional"
+    },
+    "cargo": "Analista de Dados",
+    "cidade": "Campinas",
+    "estado": "SP",
+    "pre_requisitos": "Conhecimento em Big Data",
+    "formacao": "Superior em Engenharia da Computação ou áreas afins",
+    "conhecimentos_requeridos": "Python, SQL, R",
+    "regime": "PJ",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 10.000,00"
+  },
+  {
+    "registro":"WCRDG",
+    "empresa": {
+      "nome_fantasia": "Web Creators",
+      "razao_social": "Web Creators LTDA",
+      "tipo": "nacional"
+    },
+    "cargo": "Designer Gráfico",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "pre_requisitos": "Portfólio com trabalhos anteriores",
+    "formacao": "Superior em Design ou áreas relacionadas",
+    "conhecimentos_requeridos": "Adobe Photoshop, Illustrator",
+    "regime": "CLT",
+    "jornada_trabalho": "38 horas semanais",
+    "remuneracao": "R$ 6.000,00"
+  },
+  {
+    "registro":"CYBESI",
+    "empresa": {
+      "nome_fantasia": "Cyber Security Corp",
+      "razao_social": "Cyber Security Corporation",
+      "tipo": "multinacional"
+    },
+    "cargo": "Especialista em Segurança da Informação",
+    "cidade": "Belo Horizonte",
+    "estado": "MG",
+    "pre_requisitos": "Certificações em segurança cibernética",
+    "formacao": "Superior em Sistemas de Informação",
+    "conhecimentos_requeridos": "Firewalls, VPNs, criptografia",
+    "regime": "CLT",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 12.000,00"
+  },
+  {
+    "registro":"DANEAD",
+    "empresa": {
+      "nome_fantasia": "Data Analytics Ltda",
+      "razao_social": "Data Analytics LTDA",
+      "tipo": "nacional"
+    },
+    "cargo": "Estagiário em Análise de Dados",
+    "cidade": "Curitiba",
+    "estado": "PR",
+    "pre_requisitos": "Estar cursando ensino superior",
+    "formacao": "Cursando graduação em áreas afins",
+    "conhecimentos_requeridos": "Excel, Power BI",
+    "regime": "Estágio",
+    "jornada_trabalho": "30 horas semanais",
+    "remuneracao": "R$ 1.500,00"
+  },
+  {
+    "registro":"SSOGP",
+    "empresa": {
+      "nome_fantasia": "Smart Solutions",
+      "razao_social": "Smart Solutions LTDA",
+      "tipo": "nacional"
+    },
+    "cargo": "Gerente de Projetos",
+    "cidade": "Salvador",
+    "estado": "BA",
+    "pre_requisitos": "Experiência em gerenciamento de equipes",
+    "formacao": "Superior em Administração ou áreas correlatas",
+    "conhecimentos_requeridos": "Metodologias ágeis, gerenciamento de projetos",
+    "regime": "CLT",
+    "jornada_trabalho": "44 horas semanais",
+    "remuneracao": "R$ 15.000,00"
+  },
+  {
+    "registro":"CMIDM",
+    "empresa": {
+      "nome_fantasia": "Creative Minds",
+      "razao_social": "Creative Minds LTDA",
+      "tipo": "nacional"
+    },
+    "cargo": "Desenvolvedor Mobile",
+    "cidade": "Florianópolis",
+    "estado": "SC",
+    "pre_requisitos": "Experiência com desenvolvimento para Android e iOS",
+    "formacao": "Superior Completo em Engenharia de Software",
+    "conhecimentos_requeridos": "Java, Swift, Flutter",
+    "regime": "CLT",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 9.000,00"
+  },
+  {
+    "registro":"AIICD",
+    "empresa": {
+      "nome_fantasia": "AI Innovations",
+      "razao_social": "AI Innovations S/A",
+      "tipo": "multinacional"
+    },
+    "cargo": "Cientista de Dados",
+    "cidade": "Porto Alegre",
+    "estado": "RS",
+    "pre_requisitos": "Experiência em machine learning",
+    "formacao": "Mestrado em áreas afins",
+    "conhecimentos_requeridos": "Python, R, TensorFlow",
+    "regime": "PJ",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 14.000,00"
+  },
+  {
+    "registro":"EHUAMD",
+    "empresa": {
+      "nome_fantasia": "E-Commerce Hub",
+      "razao_social": "E-Commerce Hub LTDA",
+      "tipo": "nacional"
+    },
+    "cargo": "Analista de Marketing Digital",
+    "cidade": "Brasília",
+    "estado": "DF",
+    "pre_requisitos": "Experiência em marketing digital",
+    "formacao": "Superior em Marketing ou áreas correlatas",
+    "conhecimentos_requeridos": "SEO, Google Ads, Redes Sociais",
+    "regime": "CLT",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 7.500,00"
+  },
+  {
+    "registro":"ROBER",
+    "empresa": {
+      "nome_fantasia": "Robotics Inc.",
+      "razao_social": "Robotics Inc.",
+      "tipo": "multinacional"
+    },
+    "cargo": "Engenheiro de Robótica",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "pre_requisitos": "Experiência em projetos de robótica",
+    "formacao": "Superior em Engenharia Mecânica ou Eletrônica",
+    "conhecimentos_requeridos": "Programação em C++, ROS",
+    "regime": "CLT",
+    "jornada_trabalho": "40 horas semanais",
+    "remuneracao": "R$ 11.000,00"
+  }
+]
